@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  websocketsnetworktest:
+    image: websocketsnetworktest
+    build:
+      context: .
+      dockerfile: src/WebSocketsNetworkTest/Dockerfile
