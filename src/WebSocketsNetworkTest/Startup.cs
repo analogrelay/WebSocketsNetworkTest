@@ -46,7 +46,7 @@ namespace WebSocketsNetworkTest
         private async Task RunSocketAsync(WebSocket webSocket, CancellationToken cancellationToken)
         {
             var sw = Stopwatch.StartNew();
-            var sendTimer = new Timer(TimerCallback, webSocket, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+            var sendTimer = new Timer(TimerCallback, (webSocket, cancellationToken), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
             try
             {
                 Console.WriteLine("*** ACCEPTED ***");
@@ -81,8 +81,9 @@ namespace WebSocketsNetworkTest
 
         private static async void TimerCallback(object state)
         {
+            var (socket, aborted) = ((WebSocket, CancellationToken))state;
             Console.WriteLine("*** PING ***");
-            await ((WebSocket)state).SendAsync(Encoding.UTF8.GetBytes("ping"), WebSocketMessageType.Text, endOfMessage: true, cancellationToken: CancellationToken.None);
+            await socket.SendAsync(Encoding.UTF8.GetBytes("ping"), WebSocketMessageType.Text, endOfMessage: true, cancellationToken: aborted);
         }
     }
 }
